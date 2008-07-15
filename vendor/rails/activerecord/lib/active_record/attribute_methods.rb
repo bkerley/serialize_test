@@ -185,6 +185,10 @@ module ActiveRecord
           evaluate_attribute_method attr_name, "def #{attr_name}=(new_value);write_attribute('#{attr_name}', new_value);end", "#{attr_name}="
         end
         
+        def define_write_method_for_serialized_attribute(attr_name)
+          evaluate_attribute_method attr_name, "def #{attr_name}=(new_value);write_attribute('#{attr_name}', object_to_yaml(new_value));end", "#{attr_name}="
+        end
+        
         # Defined for all +datetime+ and +timestamp+ attributes when +time_zone_aware_attributes+ are enabled.
         # This enhanced write method will automatically convert the time passed to it to the zone stored in Time.zone.
         def define_write_method_for_time_zone_conversion(attr_name)
