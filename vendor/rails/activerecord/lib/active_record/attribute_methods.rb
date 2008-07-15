@@ -80,7 +80,9 @@ module ActiveRecord
           end
 
           unless instance_method_already_implemented?("#{name}=")
-            if create_time_zone_conversion_attribute?(name, column)
+            if self.serialized_attributes[name]
+              define_write_method_for_serialized_attribute(name)
+            elsif create_time_zone_conversion_attribute?(name, column)
               define_write_method_for_time_zone_conversion(name)
             else  
               define_write_method(name.to_sym)
