@@ -9,4 +9,11 @@ EOF
     h.save
     assert_equal description, h.description
   end
+  
+  def test_actually_serializing
+    description = {:hat=>'awesome'}
+    h = Hat.create(:name=>'awesome hat', :description=>description)
+    h.save
+    assert_equal description, h.description
+  end
 end
