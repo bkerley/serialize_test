@@ -1,8 +1,12 @@
 require 'test_helper'
 
 class HatTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  def test_truth
-    assert true
+  def test_what_goes_in_comes_back_out
+    description = <<EOF
+<span style="color: #800">SODA HAT IS A SLANG TERM FOR A LID</span>
+EOF
+    h = Hat.create(:name=>'Soda Hat', :description=>description)
+    h.save
+    assert_equal description, h.description
   end
 end
