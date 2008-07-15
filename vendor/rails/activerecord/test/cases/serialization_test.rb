@@ -21,8 +21,6 @@ EOF
   end
   
   def test_serialized_columns
-    @contact.save
-    @contact.reload
     assert_equal @contact_attributes[:biography], @contact.biography
     assert_equal @contact_attributes[:preferences], @contact.preferences
   end
