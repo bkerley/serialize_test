@@ -24,6 +24,7 @@ EOF
     @contact.save
     @contact.reload
     assert_equal @contact_attributes[:biography], @contact.biography
+    assert_equal @contact_attributes[:preferences], @contact.preferences
   end
 
   def test_serialize_should_be_reversible
