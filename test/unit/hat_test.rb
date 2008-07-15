@@ -11,6 +11,17 @@ EOF
     assert_equal description, h.description
   end
   
+  def test_updates
+    h = Hat.create(:name=>'baseball hat', :description=>'dunno')
+    description = <<EOF
+<span style="color: #800">TEAM LOGO</span>
+EOF
+    h.description = description
+    assert_equal description, h.description
+    h.save
+    assert_equal description, h.description
+  end
+  
   def test_actually_serializing
     description = {:hat=>'awesome'}
     h = Hat.create(:name=>'awesome hat', :description=>description)
