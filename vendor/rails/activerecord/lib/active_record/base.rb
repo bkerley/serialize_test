@@ -1434,6 +1434,16 @@ module ActiveRecord #:nodoc:
             else
               allocate
             end
+          
+          columns_to_deserialize = record.keys.select {|k| serialized_attributes[k]}
+          columns_to_deserialize.each do |k|
+            next unless record[k]
+            deserialized_record = YAML::load(record[k])
+            unless deserialized_record.is_a? serialized_attributes[k] || deserialized_record.nil?
+              raise SerializationTypeMismatch, "#{k} was supposed to be a #{serialized_attributes[k]}, but was a #{deserialized_record.class.to_s}"
+            end
+            record[k] = deserialized_record
+          end
 
           object.instance_variable_set("@attributes", record)
           object.instance_variable_set("@attributes_cache", Hash.new)
@@ -2565,7 +2575,10 @@ module ActiveRecord #:nodoc:
         connection = self.class.connection
         attribute_names.each do |name|
           if column = column_for_attribute(name)
-            quoted[name] = connection.quote(read_attribute(name), column) unless !include_primary_key && column.primary
+            unless !include_primary_key && column.primary
+              quoted[name] = connection.quote(read_attribute(name), column) 
+              quoted[name] = connection.quote(read_attribute(name).to_yaml, column) if self.class.serialized_attributes[name]
+            end
           end
         end
         include_readonly_attributes ? quoted : remove_readonly_attributes(quoted)
