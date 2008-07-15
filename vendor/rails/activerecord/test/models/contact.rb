@@ -11,6 +11,8 @@ class Contact < ActiveRecord::Base
   column :created_at,  :datetime
   column :awesome,     :boolean
   column :preferences, :string
+  column :biography,   :text
 
   serialize :preferences
+  serialize :biography
 end
