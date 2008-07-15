@@ -3,3 +3,4 @@ nohup.out
 cache/*
 resources/*
 log/*.log
+db/*.sqlite3
