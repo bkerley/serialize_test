@@ -70,9 +70,7 @@ module ActiveRecord
         return if generated_methods?
         columns_hash.each do |name, column|
           unless instance_method_already_implemented?(name)
-            if self.serialized_attributes[name]
-              define_read_method_for_serialized_attribute(name)
-            elsif create_time_zone_conversion_attribute?(name, column)
+            if create_time_zone_conversion_attribute?(name, column)
               define_read_method_for_time_zone_conversion(name)
             else
               define_read_method(name.to_sym, name, column)
@@ -157,11 +155,6 @@ module ActiveRecord
           evaluate_attribute_method attr_name, "def #{symbol}; #{access_code}; end"
         end
 
-        # Define read method for serialized attribute.
-        def define_read_method_for_serialized_attribute(attr_name)
-          evaluate_attribute_method attr_name, "def #{attr_name}; unserialize_attribute('#{attr_name}'); end"
-        end
-        
         # Defined for all +datetime+ and +timestamp+ attributes when +time_zone_aware_attributes+ are enabled.
         # This enhanced read method automatically converts the UTC time stored in the database to the time zone stored in Time.zone.
         def define_read_method_for_time_zone_conversion(attr_name)
@@ -263,11 +256,7 @@ module ActiveRecord
       attr_name = attr_name.to_s
       if !(value = @attributes[attr_name]).nil?
         if column = column_for_attribute(attr_name)
-          if unserializable_attribute?(attr_name, column)
-            unserialize_attribute(attr_name)
-          else
-            column.type_cast(value)
-          end
+          column.type_cast(value)
         else
           value
         end
@@ -284,19 +273,6 @@ module ActiveRecord
     def unserializable_attribute?(attr_name, column)
       column.text? && self.class.serialized_attributes[attr_name]
     end
-
-    # Returns the unserialized object of the attribute.
-    def unserialize_attribute(attr_name)
-      unserialized_object = object_from_yaml(@attributes[attr_name])
-
-      if unserialized_object.is_a?(self.class.serialized_attributes[attr_name]) || unserialized_object.nil?
-        @attributes.frozen? ? unserialized_object : @attributes[attr_name] = unserialized_object
-      else
-        raise SerializationTypeMismatch,
-          "#{attr_name} was supposed to be a #{self.class.serialized_attributes[attr_name]}, but was a #{unserialized_object.class.to_s}"
-      end
-    end
-  
 
     # Updates the attribute identified by <tt>attr_name</tt> with the specified +value+. Empty strings for fixnum and float
     # columns are turned into +nil+.
