@@ -1,0 +1,22 @@
+<h1>Listing hats</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+  </tr>
+
+<% for hat in @hats %>
+  <tr>
+    <td><%=h hat.name %></td>
+    <td><%=h hat.description %></td>
+    <td><%= link_to 'Show', hat %></td>
+    <td><%= link_to 'Edit', edit_hat_path(hat) %></td>
+    <td><%= link_to 'Destroy', hat, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New hat', new_hat_path %>

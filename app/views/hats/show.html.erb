@@ -1,0 +1,13 @@
+<p>
+  <b>Name:</b>
+  <%=h @hat.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @hat.description %>
+</p>
+
+
+<%= link_to 'Edit', edit_hat_path(@hat) %> |
+<%= link_to 'Back', hats_path %>
