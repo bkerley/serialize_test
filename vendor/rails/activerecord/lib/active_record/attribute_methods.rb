@@ -80,9 +80,7 @@ module ActiveRecord
           end
 
           unless instance_method_already_implemented?("#{name}=")
-            if self.serialized_attributes[name]
-              define_write_method_for_serialized_attribute(name)
-            elsif create_time_zone_conversion_attribute?(name, column)
+            if create_time_zone_conversion_attribute?(name, column)
               define_write_method_for_time_zone_conversion(name)
             else  
               define_write_method(name.to_sym)
@@ -185,10 +183,6 @@ module ActiveRecord
 
         def define_write_method(attr_name)
           evaluate_attribute_method attr_name, "def #{attr_name}=(new_value);write_attribute('#{attr_name}', new_value);end", "#{attr_name}="
-        end
-        
-        def define_write_method_for_serialized_attribute(attr_name)
-          evaluate_attribute_method attr_name, "def #{attr_name}=(new_value);write_attribute('#{attr_name}', object_to_yaml(new_value));end", "#{attr_name}="
         end
         
         # Defined for all +datetime+ and +timestamp+ attributes when +time_zone_aware_attributes+ are enabled.

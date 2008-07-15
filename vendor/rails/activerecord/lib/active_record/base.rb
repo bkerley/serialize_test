@@ -2700,10 +2700,6 @@ module ActiveRecord #:nodoc:
         return string unless string.is_a?(String)
         YAML::load(string) rescue string
       end
-      
-      def object_to_yaml(object)
-        return YAML::dump(object)
-      end
 
       def clone_attributes(reader_method = :read_attribute, attributes = {})
         self.attribute_names.inject(attributes) do |attrs, name|
